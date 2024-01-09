@@ -1,5 +1,7 @@
+import { Loader2 } from 'lucide-react'
 import { Helmet } from 'react-helmet-async'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
@@ -20,9 +22,21 @@ export function SignIn() {
   } = useForm<SignInForm>()
 
   async function handleSigIn(data: SignInForm) {
-    console.log(data)
+    try {
+      console.log(data)
 
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+      // throw new Error()
+
+      await new Promise((resolve) => setTimeout(resolve, 2000))
+      toast.success('Enviamos um link de autenticação para seu e-mail.', {
+        action: {
+          label: 'Reenviar',
+          onClick: () => handleSigIn(data),
+        },
+      })
+    } catch {
+      toast.error('Credenciais inválidas.')
+    }
   }
 
   return (
@@ -46,7 +60,11 @@ export function SignIn() {
             </div>
 
             <Button className="w-full" type="submit" disabled={isSubmitting}>
-              Acessar painel
+              {isSubmitting ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                'Acessar painel'
+              )}
             </Button>
           </form>
         </div>
